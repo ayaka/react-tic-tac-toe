@@ -49,11 +49,9 @@ const App = () => {
   };
 
   const switchPlayers = () => {
-    if (currentPlayer === PLAYER_1) {
-      setCurrentPlayer(PLAYER_2);
-    } else {
-      setCurrentPlayer(PLAYER_1);
-    }
+    currentPlayer === PLAYER_1
+      ? setCurrentPlayer(PLAYER_2)
+      : setCurrentPlayer(PLAYER_1);
   };
 
   const checkForWinner = () => {
