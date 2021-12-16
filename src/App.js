@@ -5,7 +5,6 @@ import Board from './components/Board';
 
 const PLAYER_1 = 'x';
 const PLAYER_2 = 'o';
-
 let currentPlayer = PLAYER_1;
 
 const generateSquares = () => {
@@ -31,15 +30,11 @@ const App = () => {
   // This starts state off as a 2D array of JS objects with
   // empty value and unique ids.
   const [squares, setSquares] = useState(generateSquares());
-
   const [winner, setWinner] = useState('');
-  // Wave 2
-  // You will need to create a method to change the square
-  //   When it is clicked on.
-  //   Then pass it into the squares as a callback
+  const [isTie, setIsTie] = useState(false);
 
   const markSquare = (clickedSquare) => {
-    if (clickedSquare.value === '') {
+    if (clickedSquare.value === '' && winner === '') {
       const updatedSquares = squares.map((row) => {
         row.map((square) => {
           if (square.id === clickedSquare.id) {
@@ -113,23 +108,11 @@ const App = () => {
     return true;
   };
 
-  const getGameStatus = () => {
-    const winner = checkForWinner();
-    if (winner) {
-      return winner;
-    } else {
-      const isTie = checkForTie();
-      if (isTie) {
-        return 'tie';
-      } else {
-        return null;
-      }
-    }
-  };
-
   const boardMessage = () => {
     if (winner) {
       return `Winner is ${winner}`;
+    } else if (isTie) {
+      return 'Tie';
     } else {
       return `Current Player ${currentPlayer}`;
     }
@@ -138,13 +121,11 @@ const App = () => {
   const updateBoard = (square) => {
     markSquare(square);
 
-    const status = getGameStatus();
-    if (status === PLAYER_1 || status === PLAYER_2) {
-      setWinner(status);
-      // end
-    } else if (status === 'tie') {
-      // end
+    const winner = checkForWinner();
+    if (winner) {
+      setWinner(winner);
     } else {
+      setIsTie(checkForTie());
       switchPlayers();
     }
   };
@@ -158,7 +139,7 @@ const App = () => {
       <header className="App-header">
         <h1>React Tic Tac Toe</h1>
         <h2>{boardMessage()}</h2>
-        <button>Reset Game</button>
+        <button onClick={resetGame}>Reset Game</button>
       </header>
       <main>
         <Board onClickCallback={updateBoard} squares={squares} />
