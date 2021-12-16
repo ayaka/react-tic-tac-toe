@@ -9,7 +9,7 @@ const Square = (props) => {
   //  component when it's clicked on.
 
   const updateSquare = () => {
-    props.onClickCallback(props.id);
+    props.onClickCallback(props);
   };
 
   return (
