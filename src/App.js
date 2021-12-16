@@ -38,20 +38,6 @@ const App = () => {
   //   When it is clicked on.
   //   Then pass it into the squares as a callback
 
-  const updateBoard = (id) => {
-    markSquare(id);
-
-    const status = getGameStatus();
-    if (status === PLAYER_1 || status === PLAYER_2) {
-      setWinner(status);
-      // end
-    } else if (status === 'tie') {
-      // end
-    } else {
-      switchPlayers();
-    }
-  };
-
   const markSquare = (clickedSquare) => {
     if (clickedSquare.value === '') {
       const updatedSquares = squares.map((row) => {
@@ -72,20 +58,6 @@ const App = () => {
       currentPlayer = PLAYER_2;
     } else {
       currentPlayer = PLAYER_1;
-    }
-  };
-
-  const getGameStatus = () => {
-    const winner = checkForWinner();
-    if (winner) {
-      return winner;
-    } else {
-      const isTie = checkForTie();
-      if (isTie) {
-        return 'tie';
-      } else {
-        return null;
-      }
     }
   };
 
@@ -141,11 +113,39 @@ const App = () => {
     return true;
   };
 
+  const getGameStatus = () => {
+    const winner = checkForWinner();
+    if (winner) {
+      return winner;
+    } else {
+      const isTie = checkForTie();
+      if (isTie) {
+        return 'tie';
+      } else {
+        return null;
+      }
+    }
+  };
+
   const boardMessage = () => {
     if (winner) {
       return `Winner is ${winner}`;
     } else {
       return `Current Player ${currentPlayer}`;
+    }
+  };
+
+  const updateBoard = (square) => {
+    markSquare(square);
+
+    const status = getGameStatus();
+    if (status === PLAYER_1 || status === PLAYER_2) {
+      setWinner(status);
+      // end
+    } else if (status === 'tie') {
+      // end
+    } else {
+      switchPlayers();
     }
   };
 
