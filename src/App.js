@@ -5,7 +5,6 @@ import Board from './components/Board';
 
 const PLAYER_1 = 'x';
 const PLAYER_2 = 'o';
-let currentPlayer = PLAYER_1;
 
 const generateSquares = () => {
   const squares = [];
@@ -30,6 +29,7 @@ const App = () => {
   // This starts state off as a 2D array of JS objects with
   // empty value and unique ids.
   const [squares, setSquares] = useState(generateSquares());
+  const [currentPlayer, setCurrentPlayer] = useState(PLAYER_1);
   const [winner, setWinner] = useState('');
   const [isTie, setIsTie] = useState(false);
 
@@ -50,9 +50,9 @@ const App = () => {
 
   const switchPlayers = () => {
     if (currentPlayer === PLAYER_1) {
-      currentPlayer = PLAYER_2;
+      setCurrentPlayer(PLAYER_2);
     } else {
-      currentPlayer = PLAYER_1;
+      setCurrentPlayer(PLAYER_1);
     }
   };
 
@@ -131,7 +131,10 @@ const App = () => {
   };
 
   const resetGame = () => {
-    // Complete in Wave 4
+    setSquares(generateSquares());
+    setCurrentPlayer(PLAYER_1);
+    setWinner('');
+    setIsTie(false);
   };
 
   return (
