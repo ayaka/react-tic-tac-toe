@@ -6,8 +6,6 @@ import Board from './components/Board';
 const PLAYER_1 = 'x';
 const PLAYER_2 = 'o';
 
-let currentPlayer = PLAYER_1;
-
 const generateSquares = () => {
   const squares = [];
 
@@ -31,29 +29,12 @@ const App = () => {
   // This starts state off as a 2D array of JS objects with
   // empty value and unique ids.
   const [squares, setSquares] = useState(generateSquares());
-
+  const [currentPlayer, setCurrentPlayer] = useState(PLAYER_1);
   const [winner, setWinner] = useState('');
-  // Wave 2
-  // You will need to create a method to change the square
-  //   When it is clicked on.
-  //   Then pass it into the squares as a callback
-
-  const updateBoard = (id) => {
-    markSquare(id);
-
-    const status = getGameStatus();
-    if (status === PLAYER_1 || status === PLAYER_2) {
-      setWinner(status);
-      // end
-    } else if (status === 'tie') {
-      // end
-    } else {
-      switchPlayers();
-    }
-  };
+  const [isTie, setIsTie] = useState(false);
 
   const markSquare = (clickedSquare) => {
-    if (clickedSquare.value === '') {
+    if (clickedSquare.value === '' && winner === '') {
       const updatedSquares = squares.map((row) => {
         row.map((square) => {
           if (square.id === clickedSquare.id) {
@@ -68,25 +49,9 @@ const App = () => {
   };
 
   const switchPlayers = () => {
-    if (currentPlayer === PLAYER_1) {
-      currentPlayer = PLAYER_2;
-    } else {
-      currentPlayer = PLAYER_1;
-    }
-  };
-
-  const getGameStatus = () => {
-    const winner = checkForWinner();
-    if (winner) {
-      return winner;
-    } else {
-      const isTie = checkForTie();
-      if (isTie) {
-        return 'tie';
-      } else {
-        return null;
-      }
-    }
+    currentPlayer === PLAYER_1
+      ? setCurrentPlayer(PLAYER_2)
+      : setCurrentPlayer(PLAYER_1);
   };
 
   const checkForWinner = () => {
@@ -144,13 +109,30 @@ const App = () => {
   const boardMessage = () => {
     if (winner) {
       return `Winner is ${winner}`;
+    } else if (isTie) {
+      return 'Tie';
     } else {
       return `Current Player ${currentPlayer}`;
     }
   };
 
+  const updateBoard = (square) => {
+    markSquare(square);
+
+    const winner = checkForWinner();
+    if (winner) {
+      setWinner(winner);
+    } else {
+      setIsTie(checkForTie());
+      switchPlayers();
+    }
+  };
+
   const resetGame = () => {
-    // Complete in Wave 4
+    setSquares(generateSquares());
+    setCurrentPlayer(PLAYER_1);
+    setWinner('');
+    setIsTie(false);
   };
 
   return (
@@ -158,7 +140,7 @@ const App = () => {
       <header className="App-header">
         <h1>React Tic Tac Toe</h1>
         <h2>{boardMessage()}</h2>
-        <button>Reset Game</button>
+        <button onClick={resetGame}>Reset Game</button>
       </header>
       <main>
         <Board onClickCallback={updateBoard} squares={squares} />
